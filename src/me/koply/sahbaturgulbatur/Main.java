@@ -8,13 +8,12 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.util.LinkedList;
 
 public class Main {
 
     public Main() {
         try {
-            LinkedList<Game> games = getGames();
+            Game[] games = getGames();
             printGames(games);
         } catch (Exception e) {
             e.printStackTrace();
@@ -25,17 +24,18 @@ public class Main {
         new Main();
     }
 
-    private void printGames(LinkedList<Game> games) {
+    private void printGames(Game[] games) {
         for (Game g : games) {
             g.printInformation();
         }
     }
 
-    private LinkedList<Game> getGames() throws IOException {
+    private Game[] getGames() throws IOException {
         String url = "https://liderform.com.tr/program";
         Document doc = Jsoup.connect(url).get();
         Elements raceblocks = doc.select(".race-block");
-        LinkedList<Game> games = new LinkedList<>();
+        Game[] games = new Game[raceblocks.toArray().length];
+        int i = 0;
         for (Element race : raceblocks) {
             Game game = new Game();
             game.setTitle(race.selectFirst(".title").text());
@@ -43,7 +43,8 @@ public class Main {
             game.setRunwaylength(race.selectFirst(".length-block .runway-text").text());
 
             Elements table = race.select(".table-normal tbody tr");
-            LinkedList<Horse> horses = new LinkedList<>();
+            Horse[] horses = new Horse[table.toArray().length];
+            int j = 0;
             for (Element e : table) {
                 Horse horse = new Horse();
                 Elements tdelements = e.select("td");
@@ -51,10 +52,12 @@ public class Main {
                 horse.setWeight(tdelements.get(4).text());
                 horse.setJokey(tdelements.get(6).selectFirst(".table_name_big").text());
                 horse.setAge(Integer.parseInt(tdelements.get(7).text().split("/")[2]));
-                horses.add(horse);
+                horses[j] = horse;
+                j++;
             }
             game.setHorses(horses);
-            games.add(game);
+            games[i] = game;
+            i++;
         }
         // jsoup ile sitedeki .race-block elementlerini çek ve hepsini döngü ile listeye ekle
         return games;

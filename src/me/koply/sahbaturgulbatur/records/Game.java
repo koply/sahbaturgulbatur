@@ -5,7 +5,7 @@ import java.util.LinkedList;
 public class Game {
 
     private String title, description, runwaylength;
-    private LinkedList<Horse> horses;
+    private Horse[] horses;
 
     public void printInformation() {
         System.out.println("-- " + title + " --");
@@ -46,11 +46,11 @@ public class Game {
         return this;
     }
 
-    public LinkedList<Horse> getHorses() {
+    public Horse[] getHorses() {
         return horses;
     }
 
-    public Game setHorses(LinkedList<Horse> horses) {
+    public Game setHorses(Horse[] horses) {
         this.horses = horses;
         return this;
     }
